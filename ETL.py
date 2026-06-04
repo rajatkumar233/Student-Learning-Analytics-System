@@ -1,5 +1,7 @@
 import psycopg2
 import json
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials 
 
 def get_connection():
         return psycopg2.connect(
@@ -82,3 +84,33 @@ def load_performance_metrics():
     curr.close()
     conn.close()
     print("Data loaded successfully into performance_metrics table")
+
+
+def load_from_response():
+    conn = get_connection()
+    curr = conn.cursor()
+    gc = gspread.service_account(filename=r"F:\Youtube\ANALYST MIND Project 1\ Student Learning Analytics System Project\gcp-tutorial-youtube-4390926df4a7.json")
+    sh = gc.open_by_key('18v6ozMouLO6IDrc8Jc76DfQ4P2AZz0kbUqqB0Stg3CY')
+    worksheet = sh.worksheet('FormResponse')
+
+    data = worksheet.get_all_records()
+    for row in data:
+        curr.execute("""INSERT INTO form_responces (form_submission_date,school_id,school_name,city,state,contact_number,email_id,no_of_students)
+                    values(%s,%s,%s,%s,%s,%s,%s,%s) on conflict (school_id) do nothing""",
+                    (
+                        row.get('form_submission_date'),
+                        row.get('school_id'),
+                        row.get('school_name'),
+                        row.get('city'),
+                        row.get('state'),
+                        row.get('contact_number'),
+                        row.get('email_id'),
+                        row.get('no_of_students')
+                    )
+        )
+    conn.commit()
+    curr.close()
+    conn.close()
+    print("Data loaded successfully from google sheet into form_responces table")
+
+load_from_response()
