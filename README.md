@@ -44,3 +44,76 @@ JSON Files + Google Sheets --> Python Script --> PostgreSQL Database --> Reports
 ### Step 4: Sharing Reports
 - The finished reports are automatically uploaded to Google Sheets
 - Anyone with access to the Google Sheet can view the latest performance numbers
+
+## Technologies Used
+
+| Technology | What It Does |
+|-----------|-------------|
+| Python 3 | The main programming language used to build everything |
+| PostgreSQL | The database where all the student data is stored |
+| psycopg2 | A Python library that connects Python to PostgreSQL |
+| pandas | Helps with reading data from the database and organizing it |
+| gspread | Lets Python read from and write to Google Sheets |
+| oauth2client | Handles the login and permissions for Google API access |
+
+## Project Structure
+
+```
+Student-Learning-Analytics-System/
+|
+|-- main.py                  - Runs the complete pipeline from start to finish
+|-- ETL.py                   - Has all the functions to read data and load it into the database
+|-- reporting.py             - Creates performance reports and uploads them to Google Sheets
+|-- requirements.txt         - List of Python packages you need to install
+|-- StudentDetails.json      - Sample student information data
+|-- PerformanceInput.json    - Sample test attempt records
+|-- PerformanceMetrics.json  - Sample performance score data
+|-- .gitignore               - Tells git which files to skip
+|-- README.md                - This file you are reading right now
+```
+
+## Database Tables
+
+The project uses four tables in the PostgreSQL database:
+
+| Table Name | What It Stores |
+|-----------|---------------|
+| `student_details` | Basic student info like name, email, phone number, school, and grade |
+| `performance_input` | Test attempt records â€” who submitted, when, and whether it was processed |
+| `performance_metrics` | Performance scores â€” reading speed, pronunciation, fluency, and noise |
+| `form_responces` | School registration information collected from a Google Form |
+
+## How to Set Up and Run
+
+### What You Need First
+- Python 3 installed on your computer
+- PostgreSQL installed and running
+- A Google Cloud service account with Google Sheets API access enabled
+
+### Steps to Get Started
+
+1. **Download the project**
+   ```
+   git clone https://github.com/your-username/Student-Learning-Analytics-System.git
+   cd Student-Learning-Analytics-System
+   ```
+
+2. **Install the required Python packages**
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. **Set up the database**
+   - Open PostgreSQL and create a new database called `analystmind`
+   - Create the four tables mentioned above (student_details, performance_input, performance_metrics, form_responces)
+
+4. **Update the configuration**
+   - Open `ETL.py` and `reporting.py` in any text editor
+   - Change the database password and file paths to match your computer setup
+   - Add the correct path to your Google service account JSON key file
+
+5. **Run the pipeline**
+   ```
+   python main.py
+   ```
+   This single command will load all the data and generate the reports automatically.
