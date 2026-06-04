@@ -117,3 +117,33 @@ The project uses four tables in the PostgreSQL database:
    python main.py
    ```
    This single command will load all the data and generate the reports automatically.
+
+## Future Scope and Improvements
+
+Here are some ideas and plans to make this project even better going forward:
+
+- **Build a Visual Dashboard** â€” Right now the reports go to Google Sheets, but in the future we can build a proper dashboard using tools like Streamlit or Power BI. This would show the data with nice charts, graphs, and filters that make it much easier to understand at a glance.
+
+- **Automate the Pipeline** â€” Instead of running the script manually, we can set up a scheduler (like cron jobs on Linux or Apache Airflow) so the pipeline runs on its own every day or every week without anyone needing to do anything.
+
+- **Send Email Notifications** â€” The system could automatically send an email to school admins or teachers whenever a new report is ready. It could also send alerts if a student's performance drops below a certain level.
+
+- **Connect More Data Sources** â€” Right now we only read from JSON files and one Google Form. In the future, we can connect to learning apps, attendance tracking systems, or other school platforms to get a more complete picture of how students are doing.
+
+- **Generate Individual Student Reports** â€” Currently the reports are at the school and grade level. A useful improvement would be to create personal performance reports for each student, like a digital report card.
+
+- **Add Data Validation** â€” Before loading data into the database, we can add checks to catch any missing fields, wrong formats, or unusual values. This makes sure the reports are always accurate.
+
+- **Move to the Cloud** â€” The database and pipeline can be moved to cloud services like AWS, Google Cloud, or Azure. This would make the system more scalable and available from anywhere.
+
+- **Track Performance Over Time** â€” By keeping historical data, schools can track trends over weeks and months. They can see if students are improving, staying the same, or falling behind.
+
+- **Use Machine Learning for Predictions** â€” With enough data, we can train simple ML models to predict which students might struggle in the future. This way, teachers can step in early and give those students extra support before they fall behind.
+
+## Contributing
+
+If you would like to improve this project or add new features, feel free to fork the repository and submit a pull request. Any kind of contribution is welcome â€” whether it is fixing a bug, improving documentation, or adding something entirely new.
+
+## License
+
+This project is open source and available for educational purposes.
