@@ -1,6 +1,82 @@
 import psycopg2
 import json
 import gspread
+import pandas as pd
+
+def generate_and_push_report():
+    conn = psycopg2.connect(
+        dbname = 'Project',
+        user = 'postgres',
+        password = 'password',
+        host = 'localhost',
+        port = 5432
+    )
+
+    Schoolwise_report = """SELECT  fr.school_id,fr.school_name,fr.no_of_students as registred_users, 
+        count(distinct(ci.id)) as cmf_submitted, 
+        count(DISTINCT case when ci.status ='Processed' THEN ci.id end) as cmf_sucessful,
+        ROUND(cast(AVG(cm.wpm)as numeric),2) AS avg_wpm,
+        ROUND(cast(AVG(cm.wcpm)as numeric),2) AS avg_wcpm,
+        ROUND(cast(AVG(cm.pronunciation)as numeric),2) AS avg_pronunciation,
+        ROUND(cast(AVG(cm.fluency)as numeric),2) AS avg_fluency
+        FROM student_detail as sd 
+        LEFT JOIN performance_input as ci
+        ON sd.id = ci.child_id
+        LEFT JOIN perform_matrices as cm
+        ON cm.input_Id = ci.id
+        LEFT JOIN form_responces as fr
+        ON fr.school_id = sd.school_id
+        GROUP BY 1,2,3;
+    ;"""
+    grade_wise_report = """SELECT
+        s.grade,
+        COUNT(DISTINCT i.child_Id) AS registered_users,
+        COUNT(DISTINCT i.id) AS cmf_submitted,
+        COUNT(DISTINCT CASE 
+            WHEN i.status = 'Processed' THEN i.id 
+        END) AS cmf_successful,
+        AVG(m.wpm) AS avg_wpm,
+        AVG(m.wcpm) AS avg_wcpm,
+        AVG(m.pronunciation) AS avg_pronunciation,
+        AVG(m.fluency) AS avg_fluency
+        FROM student_detail s
+        LEFT JOIN performance_input i
+        ON s.id = i.child_id
+        LEFT JOIN perform_matrices m
+        ON i.id = m.input_id
+        LEFT JOIN form_responces as fr
+        ON fr.school_id = s.school_id
+        GROUP BY s.grade
+        ORDER BY s.grade;"""
+    
+    df_school = pd.read_sql_query(
+        Schoolwise_report,
+        conn
+    )
+    df_grade = pd.read_sql_query(
+        grade_wise_report,
+        conn
+    )
+
+    conn.close()
+    
+    output_file = "loadedResult.xlsx"
+    with pd.ExcelWriter(output_file,engine="openpyxl")as writer:
+        df_school.to_excel(writer,sheet_name="school",index=False)
+        df_grade.to_excel(writer,sheet_name="grade",index=False)
+    
+    #print(f"report saved successfully: {output_file}")
+    print("report saved successfully:")
+
+
+generate_and_push_report()
+
+
+
+
+import psycopg2
+import json
+import gspread
 from oauth2client.service_account import ServiceAccountCredentials 
 import pandas as pd
 
