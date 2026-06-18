@@ -62,7 +62,7 @@ JSON Files + Google Sheets --> Python Script --> PostgreSQL Database --> Reports
 Student-Learning-Analytics-System/
 |
 |-- main.py                  - Runs the complete pipeline from start to finish
-|-- ETL.py                   - Has all the functions to read data and load it into the database
+|-- ETL2.py                  - Has all the functions to read data and load it into the database
 |-- reporting.py             - Creates performance reports and uploads them to Google Sheets
 |-- requirements.txt         - List of Python packages you need to install
 |-- StudentDetails.json      - Sample student information data
